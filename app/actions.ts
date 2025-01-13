@@ -3,6 +3,7 @@
 import { itemsTable } from "@/db/schema"
 import { db } from "@/db/drizzle"
 import { redirect } from "next/navigation"
+import { eq } from "drizzle-orm"
 
 export async function createItem(formData: FormData) {
   const name = formData.get("name")
@@ -20,12 +21,12 @@ export async function createItem(formData: FormData) {
     quantity,
   }
 
-  await db.insert(itemsTable).values(newItem)
+  const [{ id }] = await db.insert(itemsTable).values(newItem).returning()
 
-  // TODO: Redirect
-  return redirect("/items")
+  return redirect(`/items/${id}`)
 }
 
 export async function deleteItem(id: number) {
-  console.log(id)
+  await db.delete(itemsTable).where(eq(itemsTable.id, id))
+  return redirect("/items")
 }

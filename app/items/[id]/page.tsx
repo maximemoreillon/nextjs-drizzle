@@ -1,8 +1,8 @@
 import { db } from "@/db/drizzle"
 import { itemsTable } from "@/db/schema"
 import { eq } from "drizzle-orm"
-import Link from "next/link"
-
+import DeleteItemButton from "@/components/deleteItemButton"
+import ReturnLink from "@/components/returnLink"
 // TODO: typing of params
 
 export default async function Item({ params }: any) {
@@ -13,13 +13,16 @@ export default async function Item({ params }: any) {
   return (
     <div>
       <h2>Item</h2>
-      <div>
-        <Link href="/items">Return to items list</Link>
-      </div>
+      <ReturnLink />
+
       <div>Name: {item.name}</div>
       <div>ID: {item.id}</div>
       <div>Description: {item.description}</div>
       <div>Quantity: {item.quantity}</div>
+
+      <div>
+        <DeleteItemButton id={id} />
+      </div>
     </div>
   )
 }
