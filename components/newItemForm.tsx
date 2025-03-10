@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-
-import { Button } from "@/components/ui/button"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -13,18 +13,19 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { createItem } from "@/app/actions"
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { createItem } from "@/app/actions";
 
 const formSchema = z.object({
   name: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
+    message: "Name must be at least 2 characters.",
   }),
   description: z.string(),
-  quantity: z.number(),
-})
+  quantity: z.coerce.number(),
+});
 export default function newItemForm() {
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -32,13 +33,18 @@ export default function newItemForm() {
       description: "",
       quantity: 1,
     },
-  })
+  });
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const { id } = await createItem(values);
+    router.push(`/items/${id}`);
+  }
   // ...
 
   return (
     <Form {...form}>
       {/* TODO: Action */}
-      <form className="space-y-8" action={createItem}>
+      <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
           name="name"
@@ -84,5 +90,5 @@ export default function newItemForm() {
         <Button type="submit">Submit</Button>
       </form>
     </Form>
-  )
+  );
 }
