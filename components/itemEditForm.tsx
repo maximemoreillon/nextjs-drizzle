@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { updateItem } from "@/app/actions";
+import { itemsTable } from "@/db/schema";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -26,7 +27,8 @@ const formSchema = z.object({
   quantity: z.coerce.number(),
 });
 
-type Props = { item: any };
+type Item = typeof itemsTable.$inferSelect;
+type Props = { item: Item };
 
 export function ItemEditForm(props: Props) {
   const form = useForm<z.infer<typeof formSchema>>({

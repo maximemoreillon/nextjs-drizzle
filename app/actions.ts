@@ -2,10 +2,11 @@
 
 import { itemsTable } from "@/db/schema";
 import { db } from "@/db/drizzle";
-import { redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
 
-export async function createItem(values: any) {
+type NewItem = typeof itemsTable.$inferInsert;
+
+export async function createItem(values: NewItem) {
   const [newItem] = await db.insert(itemsTable).values(values).returning();
 
   return newItem;
@@ -24,7 +25,7 @@ export async function readItem(id: number) {
   return item;
 }
 
-export async function updateItem(id: number, properties: any) {
+export async function updateItem(id: number, properties: NewItem) {
   if (!id) throw "Missing id";
 
   await db
