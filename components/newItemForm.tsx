@@ -39,11 +39,9 @@ export default function newItemForm() {
     const { id } = await createItem(values);
     router.push(`/items/${id}`);
   }
-  // ...
 
   return (
     <Form {...form}>
-      {/* TODO: Action */}
       <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}

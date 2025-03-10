@@ -23,10 +23,6 @@ export async function readItem(id: number) {
     .where(eq(itemsTable.id, id));
   return item;
 }
-export async function deleteItem(id: number) {
-  await db.delete(itemsTable).where(eq(itemsTable.id, id));
-  return redirect("/items");
-}
 
 export async function updateItem(id: number, properties: any) {
   if (!id) throw "Missing id";
@@ -35,4 +31,9 @@ export async function updateItem(id: number, properties: any) {
     .update(itemsTable)
     .set(properties)
     .where(eq(itemsTable.id, Number(id)));
+}
+
+export async function deleteItem(id: number) {
+  await db.delete(itemsTable).where(eq(itemsTable.id, id));
+  return { id };
 }
