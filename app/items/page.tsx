@@ -1,6 +1,6 @@
-import { db } from "@/db/drizzle"
-import { itemsTable } from "@/db/schema"
-import { buttonVariants } from "@/components/ui/button"
+import { db } from "@/db/drizzle";
+import { itemsTable } from "@/db/schema";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -9,12 +9,13 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
 
-import Link from "next/link"
+import Link from "next/link";
+import { readItems } from "../actions";
 
 export default async function Items() {
-  const items = await db.select().from(itemsTable)
+  const items = await readItems();
 
   return (
     <div>
@@ -59,5 +60,5 @@ export default async function Items() {
         </TableBody>
       </Table>
     </div>
-  )
+  );
 }
