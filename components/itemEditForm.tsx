@@ -92,7 +92,9 @@ export function ItemEditForm(props: Props) {
           )}
         />
 
-        <Button type="submit">Save item</Button>
+        <div className="flex gap-2">
+          <Button type="submit">Save item</Button>
+        </div>
       </form>
     </Form>
   );

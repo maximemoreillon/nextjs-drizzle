@@ -21,10 +21,7 @@ export default async function Items() {
     <div>
       <h2 className="text-2xl my-4">Items</h2>
       <div className="my-4">
-        <Link
-          href="/items/new"
-          className={buttonVariants({ variant: "outline" })}
-        >
+        <Link href="/items/new" className={buttonVariants({})}>
           New item
         </Link>
       </div>

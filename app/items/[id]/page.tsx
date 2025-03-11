@@ -16,14 +16,13 @@ export default async function Item({ params }: { params: Params }) {
 
   return (
     <div>
-      <h2>Item</h2>
+      <div className="flex justify-between">
+        <h2 className="text-2xl my-2">Item</h2>
+        <DeleteItemButton id={item.id} />
+      </div>
       <ReturnLink />
 
       <ItemEditForm item={item} />
-
-      <div>
-        <DeleteItemButton id={Number(id)} />
-      </div>
     </div>
   );
 }

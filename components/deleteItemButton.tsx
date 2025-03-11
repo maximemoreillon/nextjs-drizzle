@@ -14,5 +14,9 @@ export default function DeleteItemButton(props: Props) {
     await deleteItem(props.id);
     router.push("/items");
   }
-  return <Button onClick={handleDelete}>Delete item</Button>;
+  return (
+    <Button variant="destructive" onClick={handleDelete}>
+      Delete item
+    </Button>
+  );
 }
