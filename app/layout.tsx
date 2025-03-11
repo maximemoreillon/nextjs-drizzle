@@ -35,9 +35,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <header>
-            <h1 className="text-3xl my-4">Next.js + Drizzle</h1>
+            <h1 className="text-3xl p-2">Next.js + Drizzle</h1>
           </header>
-          <main className="ma-2">{children}</main>
+          <main className="max-w-4xl w-full mx-auto px-4">{children}</main>
         </ThemeProvider>
       </body>
     </html>
