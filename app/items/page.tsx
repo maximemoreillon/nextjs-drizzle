@@ -1,5 +1,3 @@
-import { db } from "@/db/drizzle";
-import { itemsTable } from "@/db/schema";
 import { buttonVariants } from "@/components/ui/button";
 import {
   Table,

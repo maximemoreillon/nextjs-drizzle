@@ -1,10 +1,6 @@
 import DeleteItemButton from "@/components/deleteItemButton";
 import ReturnLink from "@/components/returnLink";
 import { readItem } from "@/app/actions";
-import { Input } from "@/components/ui/input";
-import { Label } from "@radix-ui/react-label";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { ItemEditForm } from "@/components/itemEditForm";
 
 type Params = Promise<{ id: string }>;
