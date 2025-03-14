@@ -21,11 +21,13 @@ export async function readItems(queryParams: {
   const [{ count: total }] = await db
     .select({ count: count() })
     .from(itemsTable);
+
   const items = await db
     .select()
     .from(itemsTable)
     .offset(Number(offset))
     .limit(Number(limit));
+
   return { total, items, limit, offset };
 }
 
