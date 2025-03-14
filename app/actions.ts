@@ -2,7 +2,7 @@
 
 import { itemsTable } from "@/db/schema";
 import { db } from "@/db/drizzle";
-import { eq } from "drizzle-orm";
+import { eq, count } from "drizzle-orm";
 
 type NewItem = typeof itemsTable.$inferInsert;
 
@@ -12,9 +12,21 @@ export async function createItem(values: NewItem) {
   return newItem;
 }
 
-export async function readItems() {
-  const items = await db.select().from(itemsTable);
-  return items;
+export async function readItems(queryParams: {
+  [key: string]: string | string[] | undefined;
+}) {
+  const limit = Number(queryParams.limit || "5");
+  const offset = Number(queryParams.offset || "0");
+
+  const [{ count: total }] = await db
+    .select({ count: count() })
+    .from(itemsTable);
+  const items = await db
+    .select()
+    .from(itemsTable)
+    .offset(Number(offset))
+    .limit(Number(limit));
+  return { total, items, limit, offset };
 }
 
 export async function readItem(id: number) {

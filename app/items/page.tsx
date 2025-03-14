@@ -11,9 +11,14 @@ import {
 
 import Link from "next/link";
 import { readItems } from "../actions";
+import ItemsPagination from "@/components/itemsPagination";
 
-export default async function Items() {
-  const items = await readItems();
+export default async function Items({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const { items, total, offset, limit } = await readItems(await searchParams);
 
   return (
     <div>
@@ -25,7 +30,7 @@ export default async function Items() {
       </div>
 
       <Table>
-        <TableCaption>A list of items</TableCaption>
+        <TableCaption>Total items: {total}</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead className="w-[100px]">ID</TableHead>
@@ -54,6 +59,7 @@ export default async function Items() {
           ))}
         </TableBody>
       </Table>
+      <ItemsPagination total={total} offset={offset} limit={limit} />
     </div>
   );
 }
