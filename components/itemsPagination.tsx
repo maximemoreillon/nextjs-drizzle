@@ -1,3 +1,4 @@
+"use client";
 import {
   Pagination,
   PaginationContent,
@@ -8,46 +9,81 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
+import { useSearchParams, usePathname } from "next/navigation";
+
 type Props = {
   total: number;
   limit: number;
   offset: number;
 };
 export default function ItemsPagination(props: Props) {
-  function getCurrentPageNumber() {
-    return props.offset / props.total + 1;
-  }
+  const pageSpan = 2;
+
+  const searchParams = useSearchParams();
+  const pathName = usePathname();
 
   function getPagesTotal() {
     return Math.ceil(props.total / props.limit);
+  }
+  function getCurrentPageNumber() {
+    return Math.floor((props.offset / props.total) * getPagesTotal());
   }
 
   function getOffsetForPage(page: number) {
     return page * props.limit;
   }
 
+  function getPageHref(page: number) {
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set("offset", getOffsetForPage(page).toString());
+    return `${pathName}?${newSearchParams.toString()}`;
+  }
+
+  function getShownPages() {
+    return [...Array(1 + 2 * pageSpan).keys()]
+      .map((p) => p - pageSpan + getCurrentPageNumber())
+      .filter((p) => p > -1 && p < getPagesTotal());
+  }
+
   return (
     <Pagination>
       <PaginationContent>
-        {/* <PaginationItem>
-          <PaginationPrevious href="#" />
-        </PaginationItem> */}
+        {getCurrentPageNumber() > 0 && (
+          <PaginationItem>
+            <PaginationPrevious
+              href={getPageHref(getCurrentPageNumber() - 1)}
+            />
+          </PaginationItem>
+        )}
 
-        {[...Array(getPagesTotal()).keys()].map((p) => (
+        {getCurrentPageNumber() > pageSpan && (
+          <PaginationItem>
+            <PaginationEllipsis />
+          </PaginationItem>
+        )}
+
+        {getShownPages().map((p) => (
           <PaginationItem key={p}>
-            <PaginationLink href={`/items?offset=${getOffsetForPage(p)}`}>
+            <PaginationLink
+              href={getPageHref(p)}
+              isActive={p === getCurrentPageNumber()}
+            >
               {p + 1}
             </PaginationLink>
           </PaginationItem>
         ))}
 
-        {/* <PaginationItem>
-          <PaginationEllipsis />
-        </PaginationItem> 
+        {getCurrentPageNumber() < getPagesTotal() - pageSpan - 1 && (
+          <PaginationItem>
+            <PaginationEllipsis />
+          </PaginationItem>
+        )}
 
-        <PaginationItem>
-          <PaginationNext href="#" />
-        </PaginationItem>*/}
+        {getCurrentPageNumber() < getPagesTotal() - 1 && (
+          <PaginationItem>
+            <PaginationNext href={getPageHref(getCurrentPageNumber() + 1)} />
+          </PaginationItem>
+        )}
       </PaginationContent>
     </Pagination>
   );

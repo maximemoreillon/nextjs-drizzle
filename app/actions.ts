@@ -6,6 +6,8 @@ import { eq, count } from "drizzle-orm";
 
 type NewItem = typeof itemsTable.$inferInsert;
 
+const defaultLimit = 2;
+
 export async function createItem(values: NewItem) {
   const [newItem] = await db.insert(itemsTable).values(values).returning();
 
@@ -15,7 +17,7 @@ export async function createItem(values: NewItem) {
 export async function readItems(queryParams: {
   [key: string]: string | string[] | undefined;
 }) {
-  const limit = Number(queryParams.limit || "5");
+  const limit = Number(queryParams.limit || defaultLimit);
   const offset = Number(queryParams.offset || "0");
 
   const [{ count: total }] = await db
