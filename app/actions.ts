@@ -6,7 +6,7 @@ import { eq, count } from "drizzle-orm";
 
 type NewItem = typeof itemsTable.$inferInsert;
 
-const defaultLimit = 2;
+const defaultLimit = 10;
 
 export async function createItem(values: NewItem) {
   const [newItem] = await db.insert(itemsTable).values(values).returning();
@@ -34,6 +34,7 @@ export async function readItems(queryParams: {
 }
 
 export async function readItem(id: number) {
+  if (!id) throw new Error("Missing id");
   const [item] = await db
     .select()
     .from(itemsTable)
@@ -42,7 +43,7 @@ export async function readItem(id: number) {
 }
 
 export async function updateItem(id: number, properties: NewItem) {
-  if (!id) throw "Missing id";
+  if (!id) throw new Error("Missing id");
 
   await db
     .update(itemsTable)
@@ -51,6 +52,8 @@ export async function updateItem(id: number, properties: NewItem) {
 }
 
 export async function deleteItem(id: number) {
+  if (!id) throw new Error("Missing id");
+
   await db.delete(itemsTable).where(eq(itemsTable.id, id));
   return { id };
 }
