@@ -34,7 +34,6 @@ export async function readItems(queryParams: QueryParams) {
 }
 
 export async function readItem(id: number) {
-  if (!id) throw new Error("Missing id");
   const [item] = await db
     .select()
     .from(itemsTable)
@@ -43,8 +42,6 @@ export async function readItem(id: number) {
 }
 
 export async function updateItem(id: number, properties: NewItem) {
-  if (!id) throw new Error("Missing id");
-
   await db
     .update(itemsTable)
     .set(properties)
@@ -52,8 +49,6 @@ export async function updateItem(id: number, properties: NewItem) {
 }
 
 export async function deleteItem(id: number) {
-  if (!id) throw new Error("Missing id");
-
   await db.delete(itemsTable).where(eq(itemsTable.id, id));
   return { id };
 }

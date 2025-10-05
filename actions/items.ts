@@ -29,10 +29,12 @@ export async function createItemAction(state: any, formData: FormData) {
 }
 
 export async function updateItemAction(id: number, data: Item) {
+  // TODO: error handling
   await updateItem(id, data);
 }
 
 export async function deleteItemAction(id: number) {
+  // TODO: error handling
   await deleteItem(id);
   return redirect("/items");
 }

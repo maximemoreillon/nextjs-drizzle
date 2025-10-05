@@ -93,11 +93,11 @@ export function ItemEditForm(props: Props) {
           )}
         />
 
-        <div className="flex gap-2">
-          <Button type="submit" disabled={pending}>
-            Save item
-          </Button>
-        </div>
+        {/* Could use a hidden "id" field so as to use actions */}
+
+        <Button type="submit" disabled={pending}>
+          Save item
+        </Button>
       </form>
     </Form>
   );
