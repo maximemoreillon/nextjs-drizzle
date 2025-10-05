@@ -5,12 +5,6 @@ import { itemsTable } from "@/db/schema";
 import { eq, count } from "drizzle-orm";
 import { z } from "zod";
 
-const queryParamsSchema = z.object({
-  limit: z.coerce.number().default(10),
-  offset: z.coerce.number().default(0),
-});
-
-type QueryParams = z.infer<typeof queryParamsSchema>;
 type NewItem = typeof itemsTable.$inferInsert;
 
 export async function createItem(values: NewItem) {
@@ -18,8 +12,17 @@ export async function createItem(values: NewItem) {
   return newItem;
 }
 
+type QueryParams = {
+  [key: string]: string | string[] | undefined;
+};
+
 export async function readItems(queryParams: QueryParams) {
-  const { limit, offset } = queryParamsSchema.parse(queryParams);
+  const paramsSchema = z.object({
+    limit: z.coerce.number().default(10),
+    offset: z.coerce.number().default(0),
+  });
+
+  const { limit, offset } = paramsSchema.parse(queryParams);
 
   const [{ count: total }] = await db
     .select({ count: count() })
