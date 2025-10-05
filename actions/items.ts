@@ -5,17 +5,17 @@ import { createItem, deleteItem, updateItem } from "@/lib/items";
 import { z } from "zod";
 import { itemsTable } from "@/db/schema";
 
-type Item = typeof itemsTable.$inferInsert;
+// type Item = typeof itemsTable.$inferInsert;
 
-// TODO: understand state
+const itemSchema = z.object({
+  name: z.string(),
+  description: z.string().optional(),
+  quantity: z.coerce.number().default(1),
+});
+
+// For ref, Next.js's official doc: export async function createPost(prevState: any, formData: FormData) { ... }
 export async function createItemAction(state: any, formData: FormData) {
-  const itemCreateSchema = z.object({
-    name: z.string(),
-    description: z.string().optional(),
-    quantity: z.coerce.number().default(1),
-  });
-
-  const { error, data } = itemCreateSchema.safeParse({
+  const { error, data } = itemSchema.safeParse({
     name: formData.get("name"),
     description: formData.get("description"),
     quantity: formData.get("quantity"),
@@ -28,8 +28,19 @@ export async function createItemAction(state: any, formData: FormData) {
   return redirect(`/items/${newItem.id}`);
 }
 
-export async function updateItemAction(id: number, data: Item) {
-  // TODO: error handling
+export async function updateItemAction(
+  id: number,
+  state: any,
+  formData: FormData
+) {
+  const { error, data } = itemSchema.safeParse({
+    name: formData.get("name"),
+    description: formData.get("description"),
+    quantity: formData.get("quantity"),
+  });
+
+  if (error) return { error: error.message };
+
   await updateItem(id, data);
 }
 

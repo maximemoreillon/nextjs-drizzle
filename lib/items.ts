@@ -6,15 +6,14 @@ import { eq, count } from "drizzle-orm";
 import { z } from "zod";
 
 type NewItem = typeof itemsTable.$inferInsert;
+type QueryParams = {
+  [key: string]: string | string[] | undefined;
+};
 
 export async function createItem(values: NewItem) {
   const [newItem] = await db.insert(itemsTable).values(values).returning();
   return newItem;
 }
-
-type QueryParams = {
-  [key: string]: string | string[] | undefined;
-};
 
 export async function readItems(queryParams: QueryParams) {
   const paramsSchema = z.object({
