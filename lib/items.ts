@@ -3,31 +3,29 @@
 import { db } from "@/db/drizzle";
 import { itemsTable } from "@/db/schema";
 import { eq, count } from "drizzle-orm";
+import { z } from "zod";
 
+const queryParamsSchema = z.object({
+  limit: z.coerce.number().default(10),
+  offset: z.coerce.number().default(0),
+});
+
+type QueryParams = z.infer<typeof queryParamsSchema>;
 type NewItem = typeof itemsTable.$inferInsert;
-
-const defaultLimit = 10;
 
 export async function createItem(values: NewItem) {
   const [newItem] = await db.insert(itemsTable).values(values).returning();
   return newItem;
 }
 
-export async function readItems(queryParams: {
-  [key: string]: string | string[] | undefined;
-}) {
-  const limit = Number(queryParams.limit || defaultLimit);
-  const offset = Number(queryParams.offset || "0");
+export async function readItems(queryParams: QueryParams) {
+  const { limit, offset } = queryParamsSchema.parse(queryParams);
 
   const [{ count: total }] = await db
     .select({ count: count() })
     .from(itemsTable);
 
-  const items = await db
-    .select()
-    .from(itemsTable)
-    .offset(Number(offset))
-    .limit(Number(limit));
+  const items = await db.select().from(itemsTable).offset(offset).limit(limit);
 
   return { total, items, limit, offset };
 }
