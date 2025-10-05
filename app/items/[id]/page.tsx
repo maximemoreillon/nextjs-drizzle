@@ -1,6 +1,6 @@
 import DeleteItemButton from "@/components/deleteItemButton";
 import ReturnLink from "@/components/returnLink";
-import { readItem } from "@/app/actions";
+import { readItem } from "@/lib/items";
 import { ItemEditForm } from "@/components/itemEditForm";
 
 type Params = Promise<{ id: string }>;

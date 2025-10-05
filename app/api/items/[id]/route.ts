@@ -1,4 +1,4 @@
-import { deleteItem, readItem, updateItem } from "@/app/actions";
+import { deleteItem, readItem, updateItem } from "@/lib/items";
 
 export async function GET(
   _: Request,

@@ -1,4 +1,4 @@
-import { createItem, readItems } from "@/app/actions";
+import { createItem, readItems } from "@/lib/items";
 import { type NextRequest } from "next/server";
 
 export async function POST(request: Request) {

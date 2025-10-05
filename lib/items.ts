@@ -1,7 +1,7 @@
 "use server";
 
-import { itemsTable } from "@/db/schema";
 import { db } from "@/db/drizzle";
+import { itemsTable } from "@/db/schema";
 import { eq, count } from "drizzle-orm";
 
 type NewItem = typeof itemsTable.$inferInsert;
@@ -10,7 +10,6 @@ const defaultLimit = 10;
 
 export async function createItem(values: NewItem) {
   const [newItem] = await db.insert(itemsTable).values(values).returning();
-
   return newItem;
 }
 

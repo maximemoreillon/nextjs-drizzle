@@ -4,5 +4,5 @@ export const itemsTable = sqliteTable("items", {
   id: int().primaryKey({ autoIncrement: true }),
   name: text().notNull(),
   quantity: int().notNull(),
-  description: text().notNull(),
+  description: text(),
 });

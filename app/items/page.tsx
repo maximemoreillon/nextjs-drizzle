@@ -1,4 +1,4 @@
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -10,23 +10,22 @@ import {
 } from "@/components/ui/table";
 
 import Link from "next/link";
-import { readItems } from "../actions";
+import { readItems } from "@/lib/items";
 import ItemsPagination from "@/components/itemsPagination";
 
-export default async function Items({
-  searchParams,
-}: {
+type Options = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
+};
+export default async function Items({ searchParams }: Options) {
   const { items, total, offset, limit } = await readItems(await searchParams);
 
   return (
     <div>
       <div className="flex justify-between items-baseline">
         <h2 className="text-2xl my-4">Items</h2>
-        <Link href="/items/new" className={buttonVariants({})}>
-          New item
-        </Link>
+        <Button asChild>
+          <Link href="/items/new">New item</Link>
+        </Button>
       </div>
 
       <Table>
