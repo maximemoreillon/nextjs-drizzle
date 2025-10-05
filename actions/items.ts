@@ -7,6 +7,7 @@ import { itemsTable } from "@/db/schema";
 
 type Item = typeof itemsTable.$inferInsert;
 
+// TODO: understand state
 export async function createItemAction(state: any, formData: FormData) {
   const itemCreateSchema = z.object({
     name: z.string(),
