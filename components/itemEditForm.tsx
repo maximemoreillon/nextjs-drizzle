@@ -97,6 +97,9 @@ export function ItemEditForm(props: Props) {
         {state?.error && (
           <div className="text-red-600 text-center">{state.error}</div>
         )}
+        {state?.success && (
+          <p className="text-green-600 text-center">Updated successful</p>
+        )}
       </form>
     </Form>
   );

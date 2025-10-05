@@ -39,6 +39,7 @@ export async function updateItemAction(
   if (error) return { error: error.message };
 
   await updateItem(id, data);
+  return { success: true };
 }
 
 export async function deleteItemAction(id: number) {
