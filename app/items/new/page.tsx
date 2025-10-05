@@ -93,7 +93,9 @@ export default function newItem() {
           </Button>
         </form>
       </Form>
-      {state?.error && <div>{state.error}</div>}
+      {state?.error && (
+        <div className="text-red-600 text-center">{state.error}</div>
+      )}
     </div>
   );
 }

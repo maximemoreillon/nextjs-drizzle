@@ -5,17 +5,19 @@ import { createItem, deleteItem, updateItem } from "@/lib/items";
 import { z } from "zod";
 import { itemsTable } from "@/db/schema";
 
+type Item = typeof itemsTable.$inferInsert;
+
 export async function createItemAction(state: any, formData: FormData) {
   const itemCreateSchema = z.object({
     name: z.string(),
     description: z.string().optional(),
-    quantity: z.number().default(1),
+    quantity: z.coerce.number().default(1),
   });
 
   const { error, data } = itemCreateSchema.safeParse({
-    name: formData.get("name")?.toString(),
-    description: formData.get("description")?.toString(),
-    quantity: Number(formData.get("quantity")), // TODO: this looks nasty
+    name: formData.get("name"),
+    description: formData.get("description"),
+    quantity: formData.get("quantity"),
   });
 
   if (error) return { error: error.message };
@@ -25,10 +27,7 @@ export async function createItemAction(state: any, formData: FormData) {
   return redirect(`/items/${newItem.id}`);
 }
 
-export async function updateItemAction(
-  id: number,
-  data: typeof itemsTable.$inferInsert
-) {
+export async function updateItemAction(id: number, data: Item) {
   await updateItem(id, data);
 }
 
