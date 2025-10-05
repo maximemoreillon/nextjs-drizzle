@@ -3,9 +3,6 @@
 import { redirect } from "next/navigation";
 import { createItem, deleteItem, updateItem } from "@/lib/items";
 import { z } from "zod";
-import { itemsTable } from "@/db/schema";
-
-// type Item = typeof itemsTable.$inferInsert;
 
 const itemSchema = z.object({
   name: z.string(),
