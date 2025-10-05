@@ -93,8 +93,6 @@ export function ItemEditForm(props: Props) {
             )}
           />
 
-          {/* Could use a hidden "id" field so as to use actions */}
-
           <Button type="submit" disabled={pending}>
             Save item
           </Button>
