@@ -1,7 +1,7 @@
 "use client";
 
+import { deleteItemAction } from "@/actions/items";
 import { Button } from "@/components/ui/button";
-import { deleteItem } from "@/lib/items";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -15,9 +15,10 @@ export default function DeleteItemButton(props: Props) {
   async function handleDelete() {
     if (!confirm("Delete item?")) return;
     setPending(true);
-    await deleteItem(props.id);
+    const { error } = await deleteItemAction(props.id);
     setPending(false);
-    router.push("/items");
+    if (error) alert(error);
+    else router.push("/items");
   }
 
   return (

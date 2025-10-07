@@ -16,8 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { itemsTable } from "@/db/schema";
 import { useState } from "react";
-
-import { updateItem } from "@/lib/items";
+import { updateItemAction } from "@/actions/items";
 
 type Props = { item: typeof itemsTable.$inferSelect };
 
@@ -44,15 +43,11 @@ export function ItemEditForm(props: Props) {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setPending(true);
-    try {
-      await updateItem(props.item.id, values);
-      // TODO: success message
-      alert("Update successful");
-    } catch (error) {
-      setError("Item update failed");
-    } finally {
-      setPending(false);
-    }
+    const { error } = await updateItemAction(props.item.id, values);
+    if (error) setError(error);
+    setPending(false);
+    // TODO: toast
+    alert("Update successful");
   }
 
   return (
