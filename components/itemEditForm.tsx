@@ -30,7 +30,8 @@ const formSchema = z.object({
 });
 
 export function ItemEditForm(props: Props) {
-  const form = useForm({
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       name: props.item.name,
       description: props.item.description || "",
@@ -46,6 +47,7 @@ export function ItemEditForm(props: Props) {
     try {
       await updateItem(props.item.id, values);
       // TODO: success message
+      alert("Update successful");
     } catch (error) {
       setError("Item update failed");
     } finally {

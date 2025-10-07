@@ -1,19 +1,23 @@
 "use client";
 
-import { deleteItemAction } from "@/actions/items";
 import { Button } from "@/components/ui/button";
-import { useTransition } from "react";
+import { deleteItem } from "@/lib/items";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 type Props = {
   id: number;
 };
 
 export default function DeleteItemButton(props: Props) {
-  const [pending, startTransition] = useTransition();
-
+  const [pending, setPending] = useState(false);
+  const router = useRouter();
   async function handleDelete() {
     if (!confirm("Delete item?")) return;
-    startTransition(async () => await deleteItemAction(props.id));
+    setPending(true);
+    await deleteItem(props.id);
+    setPending(false);
+    router.push("/items");
   }
 
   return (
