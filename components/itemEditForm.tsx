@@ -18,19 +18,10 @@ import { itemsTable } from "@/db/schema";
 import { useActionState } from "react";
 import { updateItemAction } from "@/actions/items";
 
-const formSchema = z.object({
-  name: z.string().min(2, {
-    message: "Name must be at least 2 characters.",
-  }),
-  description: z.string().optional(),
-  quantity: z.coerce.number(),
-});
-
 type Props = { item: typeof itemsTable.$inferSelect };
 
 export function ItemEditForm(props: Props) {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm({
     defaultValues: {
       name: props.item.name,
       description: props.item.description || "",
