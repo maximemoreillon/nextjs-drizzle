@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
-import ReturnLink from "@/components/returnLink";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,9 +15,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { createItem } from "@/lib/items";
 import { useRouter } from "next/navigation";
 import { createItemAction } from "@/actions/items";
+import ReturnLink from "@/components/returnLink";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -46,7 +45,7 @@ export default function newItem() {
     setPending(true);
     const { error, data } = await createItemAction(values);
     if (error) setError(error);
-    if (data) router.push(data.id.toString());
+    else if (data) router.push(data.id.toString());
     setPending(false);
   }
 

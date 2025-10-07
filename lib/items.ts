@@ -10,6 +10,8 @@ type QueryParams = {
   [key: string]: string | string[] | undefined;
 };
 
+// TODO: zod validation here?
+
 export async function createItem(values: NewItem) {
   const [newItem] = await db.insert(itemsTable).values(values).returning();
   return newItem;

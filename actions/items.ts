@@ -1,13 +1,7 @@
+import { itemsTable } from "@/db/schema";
 import { createItem, deleteItem, updateItem } from "@/lib/items";
-import { z } from "zod";
 
-const itemSchema = z.object({
-  name: z.string(),
-  description: z.string(),
-  quantity: z.coerce.number(),
-});
-
-export async function createItemAction(values: z.infer<typeof itemSchema>) {
+export async function createItemAction(values: typeof itemsTable.$inferInsert) {
   try {
     const newItem = await createItem(values);
     return { error: null, data: newItem };
@@ -18,7 +12,7 @@ export async function createItemAction(values: z.infer<typeof itemSchema>) {
 
 export async function updateItemAction(
   id: number,
-  values: z.infer<typeof itemSchema>
+  values: typeof itemsTable.$inferInsert
 ) {
   try {
     await updateItem(id, values);
