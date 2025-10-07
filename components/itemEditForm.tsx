@@ -15,10 +15,19 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { itemsTable } from "@/db/schema";
-import { useActionState } from "react";
-import { updateItemAction } from "@/actions/items";
+import { useState } from "react";
+
+import { updateItem } from "@/lib/items";
 
 type Props = { item: typeof itemsTable.$inferSelect };
+
+const formSchema = z.object({
+  name: z.string().min(2, {
+    message: "Name must be at least 2 characters.",
+  }),
+  description: z.string(),
+  quantity: z.coerce.number(),
+});
 
 export function ItemEditForm(props: Props) {
   const form = useForm({
@@ -29,14 +38,24 @@ export function ItemEditForm(props: Props) {
     },
   });
 
-  const [state, formAction, pending] = useActionState(
-    updateItemAction.bind(null, props.item.id),
-    null
-  );
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState("");
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setPending(true);
+    try {
+      await updateItem(props.item.id, values);
+      // TODO: success message
+    } catch (error) {
+      setError("Item update failed");
+    } finally {
+      setPending(false);
+    }
+  }
 
   return (
     <Form {...form}>
-      <form action={formAction} className="space-y-8">
+      <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
           name="name"
@@ -85,12 +104,7 @@ export function ItemEditForm(props: Props) {
         <Button type="submit" disabled={pending}>
           Save item
         </Button>
-        {state?.error && (
-          <div className="text-red-600 text-center">{state.error}</div>
-        )}
-        {state?.success && (
-          <p className="text-green-600 text-center">Updated successful</p>
-        )}
+        {error && <div className="text-red-600 text-center">{error}</div>}
       </form>
     </Form>
   );
