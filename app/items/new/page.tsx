@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/form";
 import { createItem } from "@/lib/items";
 import { useRouter } from "next/navigation";
+import { createItemAction } from "@/actions/items";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -43,15 +44,10 @@ export default function newItem() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setPending(true);
-    try {
-      const newItem = await createItem(values);
-      router.push(`/items/${newItem.id}`);
-    } catch (error) {
-      console.error(error);
-      setError("Error while creating item");
-    } finally {
-      setPending(false);
-    }
+    const { error, data } = await createItemAction(values);
+    if (error) setError(error);
+    if (data) router.push(data.id.toString());
+    setPending(false);
   }
 
   return (
