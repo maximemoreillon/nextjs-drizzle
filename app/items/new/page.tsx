@@ -51,10 +51,8 @@ export default function newItem() {
     // if (error) setError(error);
     // else if (data) router.push(data.id.toString());
     // setPending(false);
-    startTransition(async () => {
-      // PROBLEM: cannot get output of this here
-      action(values);
-    });
+
+    startTransition(() => action(values)); // PROBLEM: cannot get output of action when using startTransition
   }
 
   return (

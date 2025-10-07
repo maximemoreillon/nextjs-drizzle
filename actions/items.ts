@@ -20,12 +20,12 @@ export async function createItemAction(state: any, values: Item) {
   if (newItem) redirect(`/items/${newItem.id}`);
 }
 
-export async function updateItemAction(id: number, values: Item) {
+export async function updateItemAction(id: number, state: any, values: Item) {
   try {
     await updateItem(id, values);
-    return { error: null };
+    // return { error: null };
   } catch (error: any) {
-    return { error: error.message, data: null };
+    return { error: error.message };
   }
 }
 
