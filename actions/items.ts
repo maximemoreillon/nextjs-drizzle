@@ -1,20 +1,26 @@
 import { itemsTable } from "@/db/schema";
 import { createItem, deleteItem, updateItem } from "@/lib/items";
+import { redirect } from "next/navigation";
 
-export async function createItemAction(values: typeof itemsTable.$inferInsert) {
+type Item = typeof itemsTable.$inferInsert;
+
+export async function createItemAction(state: any, values: Item) {
+  // TODO: Using let is not nice but need to have redirect outside try/catch
+  let newItem: typeof itemsTable.$inferSelect;
   try {
-    const newItem = await createItem(values);
-    // NOTE: cannot use redirect here
-    return { error: null, data: newItem };
+    newItem = await createItem(values);
+    // return { error: null, data: newItem };
+    // redirect(`items/${newItem.id}`);
   } catch (error: any) {
-    return { error: error.message, data: null };
+    // TODO: error typing is not nice
+    return { error: error.message };
   }
+
+  // Cannot use redirect in try/catch block
+  if (newItem) redirect(`/items/${newItem.id}`);
 }
 
-export async function updateItemAction(
-  id: number,
-  values: typeof itemsTable.$inferInsert
-) {
+export async function updateItemAction(id: number, values: Item) {
   try {
     await updateItem(id, values);
     return { error: null };
@@ -26,8 +32,10 @@ export async function updateItemAction(
 export async function deleteItemAction(id: number) {
   try {
     await deleteItem(id);
-    return { error: null };
+    // return { error: null };
   } catch (error: any) {
-    return { error: error.message, data: null };
+    return { error: error.message };
   }
+
+  return redirect("/items");
 }

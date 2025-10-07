@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { startTransition, useActionState, useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -37,16 +37,24 @@ export default function newItem() {
     },
   });
 
-  const router = useRouter();
-  const [pending, setPending] = useState(false); // TODO: consider using useTransition()
-  const [error, setError] = useState("");
+  // const router = useRouter(); // Not needed if using redirect() in action
+
+  // const [pending, setPending] = useState(false);
+  // const [error, setError] = useState("");
+
+  // Using useActionState allows the above two states to be combined
+  const [state, action, pending] = useActionState(createItemAction, null);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setPending(true);
-    const { error, data } = await createItemAction(values);
-    if (error) setError(error);
-    else if (data) router.push(data.id.toString());
-    setPending(false);
+    // setPending(true);
+    // const { error, data } = await createItemAction(values);
+    // if (error) setError(error);
+    // else if (data) router.push(data.id.toString());
+    // setPending(false);
+    startTransition(async () => {
+      // PROBLEM: cannot get output of this here
+      action(values);
+    });
   }
 
   return (
@@ -92,7 +100,7 @@ export default function newItem() {
               <FormItem>
                 <FormLabel>Quantity</FormLabel>
                 <FormControl>
-                  <Input placeholder="22" {...field} type="number" />
+                  <Input placeholder="22" {...field} />
                 </FormControl>
                 <FormDescription>Quantity of the item</FormDescription>
                 <FormMessage />
@@ -104,7 +112,9 @@ export default function newItem() {
           </Button>
         </form>
       </Form>
-      {error && <div className="text-red-600 text-center">{error}</div>}
+      {state?.error && (
+        <div className="text-red-600 text-center">{state?.error}</div>
+      )}
     </div>
   );
 }
