@@ -1,11 +1,9 @@
 "use client";
 
 import { useActionState } from "react";
-import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { createItemAction } from "@/actions/items";
 import ReturnLink from "@/components/returnLink";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -18,19 +16,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-const formSchema = z.object({
-  name: z.string().min(2, {
-    message: "Name must be at least 2 characters.",
-  }),
-  description: z.string(),
-  quantity: z.coerce.number(),
-});
-
 export default function newItem() {
   const [state, action, pending] = useActionState(createItemAction, null);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm({
     defaultValues: {
       name: "",
       description: "",

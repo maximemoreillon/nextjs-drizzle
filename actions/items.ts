@@ -5,7 +5,7 @@ import { createItem, deleteItem, updateItem } from "@/lib/items";
 import { z } from "zod";
 
 const itemSchema = z.object({
-  name: z.string(),
+  name: z.string().min(2),
   description: z.string().optional(),
   quantity: z.coerce.number().default(1),
 });
@@ -18,7 +18,7 @@ export async function createItemAction(state: any, formData: FormData) {
     quantity: formData.get("quantity"),
   });
 
-  if (error) return { error: error.message };
+  if (error) return { error: error.issues.map((i) => i.message).join(", ") };
 
   const newItem = await createItem(data);
 
@@ -36,14 +36,13 @@ export async function updateItemAction(
     quantity: formData.get("quantity"),
   });
 
-  if (error) return { error: error.message };
+  if (error) return { error: error.issues.map((i) => i.message).join(", ") };
 
   await updateItem(id, data);
   return { success: true };
 }
 
 export async function deleteItemAction(id: number) {
-  // TODO: error handling
   await deleteItem(id);
   return redirect("/items");
 }

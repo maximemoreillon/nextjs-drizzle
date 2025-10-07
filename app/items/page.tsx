@@ -27,7 +27,6 @@ export default async function Items({ searchParams }: Options) {
           <Link href="/items/new">New item</Link>
         </Button>
       </div>
-
       <Table>
         <TableCaption>Total items: {total}</TableCaption>
         <TableHeader>
