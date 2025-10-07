@@ -4,6 +4,7 @@ import { createItem, deleteItem, updateItem } from "@/lib/items";
 export async function createItemAction(values: typeof itemsTable.$inferInsert) {
   try {
     const newItem = await createItem(values);
+    // NOTE: cannot use redirect here
     return { error: null, data: newItem };
   } catch (error: any) {
     return { error: error.message, data: null };
