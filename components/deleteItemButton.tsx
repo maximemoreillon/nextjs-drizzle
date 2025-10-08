@@ -2,21 +2,20 @@
 
 import { deleteItemAction } from "@/actions/items";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 
 type Props = {
   id: number;
 };
 
 export default function DeleteItemButton(props: Props) {
-  const [pending, setPending] = useState(false);
+  const [pending, startTransition] = useTransition();
+
   async function handleDelete() {
     if (!confirm("Delete item?")) return;
-    setPending(true);
-    const { error } = await deleteItemAction(props.id);
-    setPending(false);
-    // TODO: toast
-    if (error) alert(error);
+    startTransition(async () => {
+      deleteItemAction(props.id);
+    });
   }
 
   return (

@@ -38,22 +38,23 @@ export function ItemEditForm(props: Props) {
     },
   });
 
-  // const [pending, setPending] = useState(false);
-  // const [error, setError] = useState("");
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState("");
 
-  const updateActionWithId = updateItemAction.bind(null, props.item.id);
-  const [state, action, pending] = useActionState(updateActionWithId, null);
+  // const updateActionWithId = updateItemAction.bind(null, props.item.id);
+  // const [state, action, pending] = useActionState(updateActionWithId, null);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // setPending(true);
-    // const { error } = await updateItemAction(props.item.id, values);
-    // if (error) setError(error);
-    // setPending(false);
+    setPending(true);
+    const res = await updateItemAction(props.item.id, values);
+    if (res?.error) setError(res?.error);
+    setPending(false);
+    alert("Update successful"); // TODO: use a toast
 
-    startTransition(() => action(values));
-
-    // TODO: toast
-    alert("Update successful");
+    // PROBLEM: cannot wait until action execution is finished to show success
+    // startTransition(() => {
+    //   action(values);
+    // });
   }
 
   return (
@@ -107,9 +108,10 @@ export function ItemEditForm(props: Props) {
         <Button type="submit" disabled={pending}>
           Save item
         </Button>
-        {state?.error && (
+        {/* {state?.error && (
           <div className="text-red-600 text-center">{state.error}</div>
-        )}
+        )} */}
+        {error && <div className="text-red-600 text-center">{error}</div>}
       </form>
     </Form>
   );
