@@ -20,6 +20,7 @@ import { updateItemAction } from "@/actions/items";
 
 type Props = { item: typeof itemsTable.$inferSelect };
 
+// TODO: define schema in other file for reuse
 const formSchema = z.object({
   name: z.string().min(2, {
     message: "Name must be at least 2 characters.",
