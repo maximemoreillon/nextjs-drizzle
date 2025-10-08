@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { itemsTable } from "@/db/schema";
-import { startTransition, useActionState, useState } from "react";
+import { startTransition, useActionState, useEffect, useState } from "react";
 import { updateItemAction } from "@/actions/items";
 
 type Props = { item: typeof itemsTable.$inferSelect };
@@ -38,23 +38,28 @@ export function ItemEditForm(props: Props) {
     },
   });
 
-  const [pending, setPending] = useState(false);
-  const [error, setError] = useState("");
+  // const [pending, setPending] = useState(false);
+  // const [error, setError] = useState("");
 
-  // const updateActionWithId = updateItemAction.bind(null, props.item.id);
-  // const [state, action, pending] = useActionState(updateActionWithId, null);
+  const updateActionWithId = updateItemAction.bind(null, props.item.id);
+  const [state, action, pending] = useActionState(updateActionWithId, null);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setPending(true);
-    const res = await updateItemAction(props.item.id, values);
-    if (res?.error) setError(res?.error);
-    setPending(false);
-    alert("Update successful"); // TODO: use a toast
+    // setPending(true);
+    // const res = await updateItemAction(props.item.id, values);
+    // if (res?.error) setError(res?.error);
+    // setPending(false);
+    // alert("Update successful"); // TODO: use a toast
 
     // PROBLEM: cannot wait until action execution is finished to show success
-    // startTransition(() => {
-    //   action(values);
-    // });
+    // SOLUTION: useEffect as hereunder
+    startTransition(() => {
+      action(values);
+    });
+
+    useEffect(() => {
+      if (state?.success) alert("Success");
+    }, [state]);
   }
 
   return (
@@ -108,10 +113,10 @@ export function ItemEditForm(props: Props) {
         <Button type="submit" disabled={pending}>
           Save item
         </Button>
-        {/* {state?.error && (
+        {state?.error && (
           <div className="text-red-600 text-center">{state.error}</div>
-        )} */}
-        {error && <div className="text-red-600 text-center">{error}</div>}
+        )}
+        {/* {error && <div className="text-red-600 text-center">{error}</div>} */}
       </form>
     </Form>
   );
