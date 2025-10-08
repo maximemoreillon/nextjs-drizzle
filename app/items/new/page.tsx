@@ -37,22 +37,10 @@ export default function newItem() {
     },
   });
 
-  // const router = useRouter(); // Not needed if using redirect() in action
-
-  // const [pending, setPending] = useState(false);
-  // const [error, setError] = useState("");
-
-  // Using useActionState allows the above two states to be combined
   const [state, action, pending] = useActionState(createItemAction, null);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // setPending(true);
-    // const { error, data } = await createItemAction(values);
-    // if (error) setError(error);
-    // else if (data) router.push(data.id.toString());
-    // setPending(false);
-
-    startTransition(() => action(values)); // PROBLEM: cannot get output of action when using startTransition
+    startTransition(() => action(values));
   }
 
   return (

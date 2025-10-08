@@ -13,7 +13,7 @@ export default function DeleteItemButton(props: Props) {
 
   async function handleDelete() {
     if (!confirm("Delete item?")) return;
-    startTransition(async () => {
+    startTransition(() => {
       deleteItemAction(props.id);
     });
   }

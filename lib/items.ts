@@ -51,5 +51,4 @@ export async function updateItem(id: number, properties: NewItem) {
 
 export async function deleteItem(id: number) {
   await db.delete(itemsTable).where(eq(itemsTable.id, id));
-  return { id };
 }

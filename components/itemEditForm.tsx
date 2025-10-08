@@ -38,21 +38,10 @@ export function ItemEditForm(props: Props) {
     },
   });
 
-  // const [pending, setPending] = useState(false);
-  // const [error, setError] = useState("");
-
   const updateActionWithId = updateItemAction.bind(null, props.item.id);
   const [state, action, pending] = useActionState(updateActionWithId, null);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // setPending(true);
-    // const res = await updateItemAction(props.item.id, values);
-    // if (res?.error) setError(res?.error);
-    // setPending(false);
-    // alert("Update successful"); // TODO: use a toast
-
-    // PROBLEM: cannot wait until action execution is finished to show success
-    // SOLUTION: useEffect as hereunder
     startTransition(() => {
       action(values);
     });

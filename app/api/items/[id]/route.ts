@@ -2,6 +2,8 @@ import { deleteItem, readItem, updateItem } from "@/lib/items";
 
 type Options = { params: Promise<{ id: string }> };
 
+// TODO: error handling
+
 export async function GET(_: Request, { params }: Options) {
   const { id } = await params;
   const item = await readItem(Number(id));
