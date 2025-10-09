@@ -18,7 +18,6 @@ export async function createItemAction(state: any, values: Item) {
 }
 
 export async function updateItemAction(id: number, state: any, values: Item) {
-  // export async function updateItemAction(id: number, values: Item) {
   try {
     await updateItem(id, values);
     return { error: null, success: true };
@@ -27,7 +26,7 @@ export async function updateItemAction(id: number, state: any, values: Item) {
   }
 }
 
-export async function deleteItemAction(id: number) {
+export async function deleteItemAction(state: any, id: number) {
   try {
     await deleteItem(id);
   } catch (error: any) {

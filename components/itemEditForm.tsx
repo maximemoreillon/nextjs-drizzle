@@ -43,14 +43,12 @@ export function ItemEditForm(props: Props) {
   const [state, action, pending] = useActionState(updateActionWithId, null);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    startTransition(() => {
-      action(values);
-    });
-
-    useEffect(() => {
-      if (state?.success) alert("Success");
-    }, [state]);
+    startTransition(() => action(values));
   }
+
+  useEffect(() => {
+    if (state?.success) alert("Success");
+  }, [state]);
 
   return (
     <Form {...form}>
