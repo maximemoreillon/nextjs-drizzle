@@ -15,11 +15,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { itemsTable } from "@/db/schema";
-import { useState } from "react";
+import { startTransition, useActionState, useEffect, useState } from "react";
 import { updateItemAction } from "@/actions/items";
 
 type Props = { item: typeof itemsTable.$inferSelect };
 
+// TODO: define schema in other file for reuse
 const formSchema = z.object({
   name: z.string().min(2, {
     message: "Name must be at least 2 characters.",
@@ -38,16 +39,17 @@ export function ItemEditForm(props: Props) {
     },
   });
 
-  const [pending, setPending] = useState(false);
-  const [error, setError] = useState("");
+  const updateActionWithId = updateItemAction.bind(null, props.item.id);
+  const [state, action, pending] = useActionState(updateActionWithId, null);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setPending(true);
-    const { error } = await updateItemAction(props.item.id, values);
-    if (error) setError(error);
-    setPending(false);
-    // TODO: toast
-    alert("Update successful");
+    startTransition(() => {
+      action(values);
+    });
+
+    useEffect(() => {
+      if (state?.success) alert("Success");
+    }, [state]);
   }
 
   return (
@@ -101,7 +103,10 @@ export function ItemEditForm(props: Props) {
         <Button type="submit" disabled={pending}>
           Save item
         </Button>
-        {error && <div className="text-red-600 text-center">{error}</div>}
+        {state?.error && (
+          <div className="text-red-600 text-center">{state.error}</div>
+        )}
+        {/* {error && <div className="text-red-600 text-center">{error}</div>} */}
       </form>
     </Form>
   );

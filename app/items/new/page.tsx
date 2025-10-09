@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { startTransition, useActionState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,10 +15,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useRouter } from "next/navigation";
 import { createItemAction } from "@/actions/items";
 import ReturnLink from "@/components/returnLink";
 
+// TODO: define schema in other file for reuse
 const formSchema = z.object({
   name: z.string().min(2, {
     message: "Name must be at least 2 characters.",
@@ -37,16 +37,10 @@ export default function newItem() {
     },
   });
 
-  const router = useRouter();
-  const [pending, setPending] = useState(false); // TODO: consider using useTransition()
-  const [error, setError] = useState("");
+  const [state, action, pending] = useActionState(createItemAction, null);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setPending(true);
-    const { error, data } = await createItemAction(values);
-    if (error) setError(error);
-    else if (data) router.push(data.id.toString());
-    setPending(false);
+    startTransition(() => action(values));
   }
 
   return (
@@ -92,7 +86,7 @@ export default function newItem() {
               <FormItem>
                 <FormLabel>Quantity</FormLabel>
                 <FormControl>
-                  <Input placeholder="22" {...field} type="number" />
+                  <Input placeholder="22" {...field} />
                 </FormControl>
                 <FormDescription>Quantity of the item</FormDescription>
                 <FormMessage />
@@ -104,7 +98,9 @@ export default function newItem() {
           </Button>
         </form>
       </Form>
-      {error && <div className="text-red-600 text-center">{error}</div>}
+      {state?.error && (
+        <div className="text-red-600 text-center">{state?.error}</div>
+      )}
     </div>
   );
 }
