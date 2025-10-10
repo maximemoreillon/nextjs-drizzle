@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { itemsTable } from "@/db/schema";
-import { startTransition, useActionState, useEffect, useState } from "react";
+import { startTransition, useActionState, useEffect } from "react";
 import { updateItemAction } from "@/actions/items";
 
 type Props = { item: typeof itemsTable.$inferSelect };
